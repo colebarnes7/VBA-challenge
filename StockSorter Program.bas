@@ -99,7 +99,7 @@ Sub StockSorter()
     GreatestPercentIncrease = Application.WorksheetFunction.Max(R)
     Range("P2").Value = GreatestPercentIncrease
         
-    'Grabs the Greatest % Increase and outputs it
+    'Grabs the Greatest % Decrease and outputs it
     GreatestPercentDecrease = Application.WorksheetFunction.Min(R)
     Range("P3").Value = GreatestPercentDecrease
         
