@@ -1,4 +1,3 @@
-Attribute VB_Name = "Module1"
 Sub StockSorter()
 
     'Sets the Column Titles
@@ -9,7 +8,8 @@ Sub StockSorter()
     Range("O2").Value = "Greatest % Increase"
     Range("O3").Value = "Greatest % Decrease"
     Range("O4").Value = "Greatest Total Volume"
-    Range("P1").Value = "Value"
+    Range("P1").Value = "Ticker"
+    Range("Q1").Value = "Value"
         
         
     'Declare Variables
@@ -20,9 +20,11 @@ Sub StockSorter()
     Dim PercentChange As Double
     Dim TotalVolume As Single
     Dim GreatestVolume As Single
+    Dim GreatestVolumeTicker As String
     Dim GreatestPercentIncrease As Double
+    Dim PercentIncreaseTicker As String
     Dim GreatestPercentDecrease As Double
-    Dim R As Range
+    Dim PercentDecreaseTicker As String
         
     'Determines the last row in the active sheet for use in loops
     Dim EndRow As Long
@@ -92,23 +94,42 @@ Sub StockSorter()
         End If
     Next I
     
-    'Sets Range to look for Greatest % increase and decrease
-    Set R = Range("K2:K" & Rows.Count)
+    'Set initial values to check against
+    GreatestVolume = Range("L2").Value
+    GreatestPercentIncrease = Range("K2").Value
+    GreatestPercentDecrease = Range("K2").Value
+    
+    'For loop to determine the greatest volume, % increase and % decrease
+    For I = 2 To EndRow1
         
-    'Grabs the Greatest % Increase and outputs it
-    GreatestPercentIncrease = Application.WorksheetFunction.Max(R)
-    Range("P2").Value = GreatestPercentIncrease
+        'Conditional for greatest volume, grabs ticker as well
+        If (Cells(I, 12).Value > GreatestVolume) Then
+            GreatestVolume = Cells(I, 12).Value
+            GreatestVolumeTicker = Cells(I, 9).Value
+            
+        'Conditional for greatest % increase, grabs ticker as well
+        ElseIf (Cells(I, 11).Value > GreatestPercentIncrease) Then
+            GreatestPercentIncrease = Cells(I, 11).Value
+            PercentIncreaseTicker = Cells(I, 9).Value
         
-    'Grabs the Greatest % Decrease and outputs it
-    GreatestPercentDecrease = Application.WorksheetFunction.Min(R)
-    Range("P3").Value = GreatestPercentDecrease
+        'Conditional for greatest % decrease, grabs ticker as well
+        ElseIf (Cells(I, 11).Value < GreatestPercentDecrease) Then
+            GreatestPercentDecrease = Cells(I, 11).Value
+            PercentDecreaseTicker = Cells(I, 9).Value
         
-    'Grabs the Greatest Total Volume and outputs it
-    Set R = Range("L2:L" & Rows.Count)
-    GreatestTotalVolume = Application.WorksheetFunction.Max(R)
-    Range("P4").Value = GreatestTotalVolume
-        
-    'Formats the Greatest % increase and decrease column to percentages
-    Range("P2:P3").NumberFormat = "0.00%"
-        
+        End If
+     Next I
+     
+     'Outputs greatest volume, % increase and % decrease
+     Range("P2").Value = PercentIncreaseTicker
+     Range("P3").Value = PercentDecreaseTicker
+     Range("P4").Value = GreatestVolumeTicker
+     Range("Q2").Value = GreatestPercentIncrease
+     Range("Q3").Value = GreatestPercentDecrease
+     Range("Q4").Value = GreatestVolume
+     
+     'Puts the bonus values into percent format
+     Range("Q2:Q3").NumberFormat = "0.00%"
+     
+
 End Sub
